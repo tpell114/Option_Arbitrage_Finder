@@ -3,6 +3,7 @@
 
 #include "OptionChain.h"
 #include <vector>
+#include <set>
 
 using namespace std;
 
@@ -23,6 +24,12 @@ struct OptionLeg {
 
 class Problem {
 
+private:
+
+    vector<OptionLeg> combination;
+    OptionChain& market_data;
+
+
 public:
 
     Problem(OptionChain& market_data) 
@@ -31,16 +38,13 @@ public:
 
     void addLeg(const OptionLeg& leg);
     void removeLeg();
-    //bool isSolved() const;
+    bool isSolved() const;
     //vector<OptionLeg> getPossibleMoves() const;
     //bool solve();
     double getTotalCost() const;
+    set<double> getCriticalPrices() const;
 
 
-private:
-
-    vector<OptionLeg> combination;
-    OptionChain& market_data;
 
 
     

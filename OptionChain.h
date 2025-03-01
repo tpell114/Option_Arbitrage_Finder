@@ -10,13 +10,12 @@ using namespace std;
 enum class OptionType {Call, Put};
 
 struct Option {
+    
     OptionType type;
     double strike;
     double bid;
     double ask;
 
-   
-    
     Option(OptionType option_type, double strike, double bid, double ask)
         : type(option_type), strike(strike), bid(bid), ask(ask) {}
         

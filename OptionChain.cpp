@@ -70,6 +70,7 @@ void OptionChain::print_chain() const {
     cout << "--------------------------------------------------" << endl;
     
     for (const auto& [strike, options] : strike_map) {
+        
         const auto& [call_option, put_option] = options;
         
         cout << fixed << setprecision(2);
