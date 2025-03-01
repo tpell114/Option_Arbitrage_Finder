@@ -22,7 +22,7 @@ struct Option {
         
 };
 
-class option_chain {
+class OptionChain {
 
 public:
 

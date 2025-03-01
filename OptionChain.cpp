@@ -1,4 +1,4 @@
-#include "option_chain.h"
+#include "OptionChain.h"
 
 #include <fstream>
 #include <sstream>
@@ -7,7 +7,7 @@
 
 using namespace std;
 
-void option_chain::add_option(OptionType type, double strike, double bid, double ask) {
+void OptionChain::add_option(OptionType type, double strike, double bid, double ask) {
 
     Option option(type, strike, bid, ask);
 
@@ -23,7 +23,7 @@ void option_chain::add_option(OptionType type, double strike, double bid, double
 
 }
 
-void option_chain::load_from_file(const string& filename) {
+void OptionChain::load_from_file(const string& filename) {
 
     ifstream file(filename);
 
@@ -62,7 +62,7 @@ void option_chain::load_from_file(const string& filename) {
     file.close();
 }
 
-void option_chain::print_chain() const {
+void OptionChain::print_chain() const {
 
     cout << "Option Chain:" << endl;
     cout << "--------------------------------------------------" << endl;

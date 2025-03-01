@@ -1,22 +1,15 @@
-#include "option_chain.h"
+#include "OptionChain.h"
 
 int main() {
 
 
-    option_chain chain;
-
+    OptionChain chain;
 
 
     chain.load_from_file("data.txt");
 
 
-
     chain.print_chain();
-
-
-
-
-
 
 
 
