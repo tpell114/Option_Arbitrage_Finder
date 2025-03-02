@@ -59,6 +59,9 @@ set<double> Problem::getCriticalPrices() const {
     for (const auto& leg : combination) {
         criticalPrices.insert(leg.option->strike);
     }
+
+    criticalPrices.insert(10000.0);
+    criticalPrices.insert(0.0);
     
     return criticalPrices;
 }
@@ -162,7 +165,7 @@ void Problem::printSolution() const {
     cout << "\nArbitrage opportunity found!" << endl;
     cout << "--------------------------------" << endl;
     cout << "Net Credit: $" << -getTotalCost() << endl;
-    cout << "Legs:" << endl;
+    cout << "Legs:" << endl << endl;
     
     for (size_t i = 0; i < combination.size(); i++) {
         const auto& leg = combination[i];

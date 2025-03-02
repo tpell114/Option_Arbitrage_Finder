@@ -1,29 +1,31 @@
 #include "OptionChain.h"
 #include "Problem.h"
 #include <iostream>
+#include <chrono>
 
 int main() {
-    // Load option chain from file
-    OptionChain chain;
-    chain.load_from_file("data.txt");
     
-    // Print the loaded option chain
-    std::cout << "Initial option chain:" << std::endl;
+    OptionChain chain;
+    chain.load_from_file("data3.txt");
     chain.print_chain();
     
-    // Create problem instance
     Problem arbitrageFinder(chain);
     
-    // Run the search
     std::cout << "\nSearching for arbitrage opportunities..." << std::endl;
+
+    auto start_time = chrono::high_resolution_clock::now();
     bool found = arbitrageFinder.solve();
+    auto end_time = chrono::high_resolution_clock::now();
     
-    // Check results
     if (found) {
         arbitrageFinder.printSolution();
     } else {
         std::cout << "\nNo arbitrage opportunities found in this option chain." << std::endl;
     }
+
+    auto duration = chrono::duration_cast<std::chrono::microseconds>(end_time - start_time);
+    cout << "\nSearch completed in " << duration.count() << " microseconds." << std::endl;
     
     return 0;
 }
+
