@@ -41,6 +41,10 @@ void Problem::removeLeg() {
     }
 }
 
+void Problem::clearCombination() {
+    combination.clear();
+}
+
 double Problem::getTotalCost() const {
 
     double total_cost = 0.0;

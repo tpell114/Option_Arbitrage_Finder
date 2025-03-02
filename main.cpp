@@ -13,18 +13,33 @@ int main() {
     
     std::cout << "\nSearching for arbitrage opportunities..." << std::endl;
 
-    auto start_time = chrono::high_resolution_clock::now();
-    bool found = arbitrageFinder.solve();
-    auto end_time = chrono::high_resolution_clock::now();
+
+    chrono::microseconds total_time(0);
+    int loops = 3;
+
+    for (int i = 0; i < loops; i++) {
+
+        auto start_time = chrono::high_resolution_clock::now();
+        bool found = arbitrageFinder.solve();
+        auto end_time = chrono::high_resolution_clock::now();
+
+        if (found) {
+            arbitrageFinder.printSolution();
+        } else {
+            std::cout << "\nNo arbitrage opportunities found in this option chain." << std::endl;
+        }
     
-    if (found) {
-        arbitrageFinder.printSolution();
-    } else {
-        std::cout << "\nNo arbitrage opportunities found in this option chain." << std::endl;
+        auto duration = chrono::duration_cast<std::chrono::microseconds>(end_time - start_time);
+        total_time += duration;
+        cout << "\nSearch completed in " << duration.count() << " microseconds." << std::endl;
+
+        arbitrageFinder.clearCombination();
     }
 
-    auto duration = chrono::duration_cast<std::chrono::microseconds>(end_time - start_time);
-    cout << "\nSearch completed in " << duration.count() << " microseconds." << std::endl;
+    cout << "--------------------------------" << endl;
+    cout << "\nAverage search time for " << loops << " iterations: " << total_time.count() / loops << " microseconds." << endl << endl;
+    
+    
     
     return 0;
 }

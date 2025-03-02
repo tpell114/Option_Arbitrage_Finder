@@ -46,6 +46,7 @@ public:
     bool solve();
     double getTotalCost() const;
     void printSolution() const;
+    void clearCombination();
     
 
 
