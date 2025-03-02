@@ -29,6 +29,10 @@ private:
     vector<OptionLeg> combination;
     OptionChain& market_data;
 
+    set<double> getCriticalPrices() const;
+    double calculatePayoffAt(double price) const;
+    vector<OptionLeg> getPossibleMoves() const;
+
 
 public:
 
@@ -39,10 +43,10 @@ public:
     void addLeg(const OptionLeg& leg);
     void removeLeg();
     bool isSolved() const;
-    //vector<OptionLeg> getPossibleMoves() const;
-    //bool solve();
+    bool solve();
     double getTotalCost() const;
-    set<double> getCriticalPrices() const;
+    void printSolution() const;
+    
 
 
 
