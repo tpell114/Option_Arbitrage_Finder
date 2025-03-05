@@ -91,7 +91,7 @@ double Problem::calculatePayoffAt(double price) const {
     return payoff;
 }
 
-
+/*
 vector<OptionLeg> Problem::getPossibleMoves() const {
 
     vector<OptionLeg> possibleMoves;
@@ -138,6 +138,67 @@ vector<OptionLeg> Problem::getPossibleMoves() const {
             if(!hasLeg) {
                 possibleMoves.push_back(OptionLeg(put_ptr, PositionType::Long));
                 possibleMoves.push_back(OptionLeg(put_ptr, PositionType::Short));
+            }
+        }
+    }
+    
+    return possibleMoves;
+}
+*/
+
+vector<OptionLeg> Problem::getPossibleMoves() const {
+
+    vector<OptionLeg> possibleMoves;
+
+    if (combination.size() >= 4) {
+        return possibleMoves;
+    }
+    
+    for (const auto& [strike, options] : market_data.strike_map) {
+        // calls
+        if (options.first.has_value()) {
+
+            Option* call_ptr = const_cast<Option*>(&options.first.value());
+            
+            // Skip adding short position for options with zero bid
+            if (call_ptr->bid <= 0.0) {
+                possibleMoves.push_back(OptionLeg(call_ptr, PositionType::Long));
+            } else {
+                bool hasLeg = false;
+                for (const auto& leg : combination) {
+                    if (leg.option == call_ptr) {
+                        hasLeg = true;
+                        break;
+                    }
+                }
+
+                if (!hasLeg) {
+                    possibleMoves.push_back(OptionLeg(call_ptr, PositionType::Long));
+                    possibleMoves.push_back(OptionLeg(call_ptr, PositionType::Short));
+                }
+            }
+        }
+        
+        // puts
+        if (options.second.has_value()) {
+            Option* put_ptr = const_cast<Option*>(&options.second.value());
+            
+            // Skip adding short position for options with zero bid
+            if (put_ptr->bid <= 0.0) {
+                possibleMoves.push_back(OptionLeg(put_ptr, PositionType::Long));
+            } else {
+                bool hasLeg = false;
+                for (const auto& leg : combination) {
+                    if (leg.option == put_ptr) {
+                        hasLeg = true;
+                        break;
+                    }
+                }
+
+                if (!hasLeg) {
+                    possibleMoves.push_back(OptionLeg(put_ptr, PositionType::Long));
+                    possibleMoves.push_back(OptionLeg(put_ptr, PositionType::Short));
+                }
             }
         }
     }
