@@ -5,10 +5,10 @@
 
 int main() {
 
-    auto programStartTime = chrono::steady_clock::now();
+    auto programStartTime = chrono::high_resolution_clock::now();
     
     OptionChain chain;
-    chain.load_from_file("data2.txt");
+    chain.load_from_file("data1.txt");
     chain.print_chain();
     
     Problem arbitrageFinder(chain);
@@ -17,13 +17,13 @@ int main() {
 
 
     chrono::microseconds totalTime(0);
-    int loops = 1;
+    int loops = 1000;
 
     for (int i = 0; i < loops; i++) {
 
-        auto loopStartTime = chrono::steady_clock::now();
+        auto loopStartTime = chrono::high_resolution_clock::now();
         bool found = arbitrageFinder.solve();
-        auto loopEndTime = chrono::steady_clock::now();
+        auto loopEndTime = chrono::high_resolution_clock::now();
 
         if (found) {
             arbitrageFinder.printSolution();
@@ -38,7 +38,7 @@ int main() {
         arbitrageFinder.clearCombination();
     }
 
-    auto programEndTime = chrono::steady_clock::now();
+    auto programEndTime = chrono::high_resolution_clock::now();
 
     cout << "--------------------------------" << endl;
     cout << "\nAverage search time for " << loops << " iterations: " << totalTime.count() / loops << " microseconds." << endl << endl;
@@ -46,5 +46,4 @@ int main() {
     
     return 0;
 }
-
 
