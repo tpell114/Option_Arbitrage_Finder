@@ -32,16 +32,9 @@ public:
 
 private:
     
-
     void add_option(OptionType type, double strike, double bid, double ask);
 
-    
-
 };
-
-
-
-
 
 
 #endif
