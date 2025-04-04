@@ -17,7 +17,7 @@ data Option = OptionCon {
     strike :: Double,
     bid :: Double,
     ask :: Double
-} deriving (Show)
+} deriving (Show, Eq)
 
 -- Create a new option
 newOption :: OptionType -> Double -> Double -> Double -> Option
