@@ -1,4 +1,4 @@
-module TestADT where
+module Main where
 
 import Option
 import OptionChain
@@ -58,5 +58,5 @@ printPayoffs prob =
                               ": " ++ show (calculatePayoffAt price prob)))
           (Set.toList (getCriticalPrices prob))
 
-testADT :: IO ()
-testADT = testBoxSpread
+main :: IO ()
+main = testBoxSpread

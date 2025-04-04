@@ -1,3 +1,4 @@
+{-# LANGUAGE DeriveGeneric, DeriveAnyClass, DerivingStrategies#-}
 module Option
 (
     Option,
@@ -9,15 +10,20 @@ module Option
     ask
 ) where
 
+import GHC.Generics (Generic)
+import Control.DeepSeq (NFData)
+
 data OptionType = Call | Put
-    deriving (Show, Eq, Ord)
+    deriving stock (Show, Eq, Ord, Generic)
+    deriving anyclass (NFData)
 
 data Option = OptionCon {
     optionType :: OptionType,
     strike :: Double,
     bid :: Double,
     ask :: Double
-} deriving (Show, Eq, Ord)
+} deriving stock (Show, Eq, Ord, Generic)
+    deriving anyclass (NFData)
 
 -- Create a new option
 newOption :: OptionType -> Double -> Double -> Double -> Option

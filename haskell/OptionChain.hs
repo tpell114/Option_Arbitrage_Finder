@@ -1,3 +1,4 @@
+{-# LANGUAGE DeriveGeneric, DeriveAnyClass, DerivingStrategies#-}
 module OptionChain
 (
     OptionChain,
@@ -8,11 +9,15 @@ module OptionChain
 ) where
 
 import qualified Data.Map as Map
+import GHC.Generics (Generic)
+import Control.DeepSeq (NFData)
 import Option
 
 -- Map(Strike -> (call, put))
 newtype OptionChain = ChainCon (Map.Map Double (Maybe Option, Maybe Option))
-    deriving (Show)
+    deriving stock (Show, Generic)
+    deriving anyclass (NFData)
+
 
 -- Create an empty option chain
 emptyChain :: OptionChain

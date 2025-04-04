@@ -1,3 +1,4 @@
+{-# LANGUAGE DeriveGeneric, DeriveAnyClass, DerivingStrategies #-}
 module Problem
 (
     Problem,
@@ -17,6 +18,8 @@ module Problem
 
 import qualified Data.Set as Set
 import Data.List (sort)
+import GHC.Generics (Generic)
+import Control.DeepSeq (NFData)
 import Option
 import OptionChain
 import OptionLeg
@@ -25,7 +28,8 @@ import OptionLeg
 data Problem = ProblemCon {
     chainData :: OptionChain,
     combination :: [OptionLeg]
-} deriving (Show)
+} deriving stock (Show, Generic)
+    deriving anyclass (NFData)
 
 -- Create a new problem with empty combination
 newProblem :: OptionChain -> Problem

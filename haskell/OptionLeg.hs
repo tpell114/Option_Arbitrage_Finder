@@ -1,3 +1,4 @@
+{-# LANGUAGE DeriveGeneric, DeriveAnyClass, DerivingStrategies #-}
 module OptionLeg
 (
     OptionLeg,
@@ -8,16 +9,20 @@ module OptionLeg
     getCost
 ) where
 
+import GHC.Generics (Generic)
+import Control.DeepSeq (NFData)
 import Option
 
 data PositionType = Long | Short
-    deriving (Show, Eq, Ord)
+    deriving stock (Show, Eq, Ord, Generic)
+    deriving anyclass (NFData)
 
 data OptionLeg = LegCon {
     legOption :: Option,
     position :: PositionType
-} deriving (Show, Eq, Ord)
-
+} deriving stock (Show, Eq, Ord, Generic)
+    deriving anyclass (NFData)
+    
 -- Create a new option leg
 newLeg :: Option -> PositionType -> OptionLeg
 newLeg = LegCon
