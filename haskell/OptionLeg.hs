@@ -11,12 +11,12 @@ module OptionLeg
 import Option
 
 data PositionType = Long | Short
-    deriving (Show, Eq)
+    deriving (Show, Eq, Ord)
 
 data OptionLeg = LegCon {
     legOption :: Option,
     position :: PositionType
-} deriving (Show)
+} deriving (Show, Eq, Ord)
 
 -- Create a new option leg
 newLeg :: Option -> PositionType -> OptionLeg

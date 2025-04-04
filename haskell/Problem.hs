@@ -6,11 +6,17 @@ module Problem
     newProblem,
     addLeg,
     removeLeg,
-    getTotalCost
+    getTotalCost,
+    getCriticalPrices,
+    calculatePayoffAt,
+    getPossibleMoves,
+    isSolved,
+    solve
 
 ) where
 
 import qualified Data.Set as Set
+import Data.List (sort)
 import Option
 import OptionChain
 import OptionLeg
@@ -93,3 +99,28 @@ isSolved prob =
         criticalPrices = Set.toList (getCriticalPrices prob)
         payoffs = map (`calculatePayoffAt` prob) criticalPrices
     in legCount >= 2 && cost < 0 && all (> 0) payoffs
+
+
+
+-- Solve the problem recursively, returning all possible solutions
+-- Problem -> [Solution]
+solve :: Problem -> [Problem]
+solve prob 
+    | isSolved prob = [prob]  -- There's one solution if already solved
+    | otherwise = uniqueSolutions 
+                  [ solution 
+                  | length (combination prob) < 4,  -- Check maximum leg count
+                    move <- getPossibleMoves prob,  -- Generate possible moves
+                    let prob' = addLeg move prob,   -- Apply move to problem
+                    solution <- solve prob'         -- Recursively solve
+                  ]
+    where
+        -- Helper to remove duplicate solutions that just have legs in different orders
+        uniqueSolutions :: [Problem] -> [Problem]
+        uniqueSolutions [] = []
+        uniqueSolutions (x:xs) = x : uniqueSolutions (filter (not . hasSameLegs x) xs)
+        
+        -- Check if two problems have the same set of legs (ignoring order)
+        hasSameLegs :: Problem -> Problem -> Bool
+        hasSameLegs p1 p2 = sort (combination p1) == sort (combination p2)
+
