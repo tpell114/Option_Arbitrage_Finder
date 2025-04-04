@@ -1,13 +1,15 @@
 #include "Problem.h"
 #include <iostream>
+#include <limits>
 
+/*
 bool Problem::isSolved() const {
 
     // 1. There must be at least two legs
     if (combination.size() < 2) {
         return false;
     }
-    
+
     // 2. The total cost is negative (we receive money upfront)
     double cost = getTotalCost();
     if (cost >= 0) {
@@ -25,6 +27,26 @@ bool Problem::isSolved() const {
             return false;
         }
 
+    }
+    
+    return true;
+}
+*/
+
+bool Problem::isSolved() const {
+
+    if (combination.size() < 2) {
+        return false;
+    }
+
+    set<double> criticalPrices = getCriticalPrices();
+    
+    for (const auto& price : criticalPrices) {
+        double payoff = calculatePayoffAt(price);
+
+        if (payoff <= 0) {
+            return false;
+        }
     }
     
     return true;
