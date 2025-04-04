@@ -148,9 +148,16 @@ vector<OptionLeg> Problem::getPossibleMoves() const {
 }
 
 
-bool Problem::solve() {
+
+void Problem::solve() {
     
-    if (isSolved()) return true;
+    if (isSolved()) {
+        vector<OptionLeg> sortedCombo = combination;
+        sort(sortedCombo.begin(), sortedCombo.end());  // Order-insensitive insert
+        allSolutions.insert(sortedCombo);              // Set will deduplicate
+        return;
+    }
+    
     
     vector<OptionLeg> possibleMoves = getPossibleMoves();
     
@@ -158,37 +165,79 @@ bool Problem::solve() {
         
         addLeg(move);
         
-        if (solve()) return true;  // Solution found
+        solve();  // Continue searching for more solutions
         
         removeLeg();
     }
-
-    return false;
 }
 
-void Problem::printSolution() const {
-    
-    cout << "\nArbitrage opportunity found!" << endl;
-    cout << "--------------------------------" << endl;
-    cout << "Net Credit: $" << -getTotalCost() << endl;
-    cout << "Legs:" << endl << endl;
-    
-    for (size_t i = 0; i < combination.size(); i++) {
-        const auto& leg = combination[i];
-        cout << i+1 << ". ";
-        cout << (leg.position == PositionType::Long ? "Long " : "Short ");
-        cout << (leg.option->type == OptionType::Call ? "Call" : "Put");
-        cout << " Strike: $" << leg.option->strike;
-        cout << " Price: $" << abs(leg.getCost()) << endl;
-    }
-    
-    cout << "\nPayoff at critical prices:" << endl;
-    for (const auto& price : getCriticalPrices()) {
-        cout << "Price: $" << price << " -> Profit: $" << calculatePayoffAt(price) << endl;
-    }
-    cout << "--------------------------------" << endl;
+void Problem::findAllSolutions() {
+    clearSolutions();
+    solve();
 }
 
+void Problem::clearSolutions() {
+    allSolutions.clear();
+}
 
+void Problem::printAllSolutions() const {
+    if (allSolutions.empty()) {
+        cout << "\nNo arbitrage opportunities found in this option chain." << endl;
+        return;
+    }
+
+    cout << "\nFound " << allSolutions.size() << " arbitrage opportunities!" << endl;
+
+    int solutionIndex = 1;
+
+    for (const auto& solution : allSolutions) {
+        cout << "\nArbitrage Solution #" << solutionIndex++ << endl;
+        cout << "--------------------------------" << endl;
+
+        double totalCost = 0.0;
+        for (const auto& leg : solution) {
+            totalCost += leg.getCost();
+        }
+
+        cout << "Net Credit: $" << -totalCost << endl;
+        cout << "Legs:" << endl << endl;
+
+        int legIndex = 1;
+        for (const auto& leg : solution) {
+            cout << legIndex++ << ". ";
+            cout << (leg.position == PositionType::Long ? "Long " : "Short ");
+            cout << (leg.option->type == OptionType::Call ? "Call" : "Put");
+            cout << " Strike: $" << leg.option->strike;
+            cout << " Price: $" << abs(leg.getCost()) << endl;
+        }
+
+        // Calculate and print payoff
+        set<double> criticalPrices;
+        for (const auto& leg : solution) {
+            criticalPrices.insert(leg.option->strike);
+        }
+        criticalPrices.insert(0.0);
+        criticalPrices.insert(10000.0);
+
+        cout << "\nPayoff at critical prices:" << endl;
+        for (const auto& price : criticalPrices) {
+            double payoff = -totalCost;
+
+            for (const auto& leg : solution) {
+                if (leg.option->type == OptionType::Call) {
+                    double intrinsic = max(0.0, price - leg.option->strike);
+                    payoff += (leg.position == PositionType::Long) ? intrinsic : -intrinsic;
+                } else {
+                    double intrinsic = max(0.0, leg.option->strike - price);
+                    payoff += (leg.position == PositionType::Long) ? intrinsic : -intrinsic;
+                }
+            }
+
+            cout << "Price: $" << price << " -> Profit: $" << payoff << endl;
+        }
+
+        cout << "--------------------------------" << endl;
+    }
+}
 
 

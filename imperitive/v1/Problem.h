@@ -4,6 +4,7 @@
 #include "OptionChain.h"
 #include <vector>
 #include <set>
+#include <algorithm>
 
 using namespace std;
 
@@ -22,11 +23,21 @@ struct OptionLeg {
     }
 };
 
+inline bool operator<(const OptionLeg& a, const OptionLeg& b) {
+    // Compare by Option pointer address first
+    if (a.option != b.option){
+        return a.option < b.option;
+    }
+    return a.position < b.position;
+}
+
+
 class Problem {
 
 private:
 
     vector<OptionLeg> combination;
+    set<vector<OptionLeg>> allSolutions;
     OptionChain& market_data;
 
     set<double> getCriticalPrices() const;
@@ -43,9 +54,11 @@ public:
     void addLeg(const OptionLeg& leg);
     void removeLeg();
     bool isSolved() const;
-    bool solve();
+    void solve();
     double getTotalCost() const;
-    void printSolution() const;
+    void findAllSolutions();
+    void printAllSolutions() const;
+    void clearSolutions();
     void clearCombination();
     
 
