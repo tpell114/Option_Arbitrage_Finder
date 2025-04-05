@@ -44,7 +44,7 @@ bool Problem::isSolved() const {
     for (const auto& price : criticalPrices) {
         double payoff = calculatePayoffAt(price);
 
-        if (payoff <= 0) {
+        if (payoff < 0.01) {
             return false;
         }
     }
@@ -126,7 +126,7 @@ vector<OptionLeg> Problem::getPossibleMoves() const {
         // calls
         if (options.first.has_value()) {
             
-            Option* call_ptr = const_cast<Option*>(&options.first.value());
+            const Option* call_ptr = &options.first.value();
 
             bool hasLeg = false;
 
@@ -147,7 +147,7 @@ vector<OptionLeg> Problem::getPossibleMoves() const {
         // puts
         if (options.second.has_value()) {
         
-            Option* put_ptr = const_cast<Option*>(&options.second.value());
+            const Option* put_ptr = &options.second.value();
 
             bool hasLeg = false;
 
@@ -175,8 +175,8 @@ void Problem::solve() {
     
     if (isSolved()) {
         vector<OptionLeg> sortedCombo = combination;
-        sort(sortedCombo.begin(), sortedCombo.end());  // Order-insensitive insert
-        allSolutions.insert(sortedCombo);              // Set will deduplicate
+        sort(sortedCombo.begin(), sortedCombo.end());
+        allSolutions.insert(sortedCombo);
         return;
     }
     

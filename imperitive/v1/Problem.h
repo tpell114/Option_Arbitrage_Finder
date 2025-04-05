@@ -12,10 +12,10 @@ enum class PositionType {Long, Short};
 
 struct OptionLeg {
 
-    Option* option;
+    const Option* option;
     PositionType position;
     
-    OptionLeg(Option* option, PositionType position) 
+    OptionLeg(const Option* option, PositionType position) 
         : option(option), position(position) {}
     
     double getCost() const {

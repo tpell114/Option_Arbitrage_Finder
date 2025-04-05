@@ -56,7 +56,7 @@ processFile filename = do
             let durationMicros = fromIntegral (toNanoSecs diffTime) / 1000 :: Double
 
             -- Only print solutions on the first loop
-            when (currentLoop == 1) $ printAllSolutions solutions
+            when (currentLoop == 1) (printAllSolutions solutions)
 
             putStrLn ("\nSearch completed in " ++ printf "%.0f" durationMicros ++ " microseconds")
 
