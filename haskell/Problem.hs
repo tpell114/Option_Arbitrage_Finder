@@ -102,7 +102,7 @@ isSolved prob =
         cost = getTotalCost prob
         criticalPrices = Set.toList (getCriticalPrices prob)
         payoffs = map (`calculatePayoffAt` prob) criticalPrices
-    in legCount >= 2 && cost < 0 && all (> 0) payoffs
+    in legCount >= 2 && all (> 0) payoffs
 
 
 
