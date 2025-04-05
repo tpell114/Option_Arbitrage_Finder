@@ -67,7 +67,6 @@ printChain chain = do
 -- Print a solution (arbitrage opportunity)
 printSolution :: Problem -> IO ()
 printSolution solution = do
-    putStrLn "\nArbitrage opportunity found!"
     putStrLn "--------------------------------"
     putStrLn ("Net Credit: $" ++ formatPrice (negate (getTotalCost solution)))
     putStrLn "Legs:"
@@ -93,13 +92,14 @@ printSolution solution = do
     where
         formatPrice = printf "%.2f"
 
+
 -- Print all solutions
 printAllSolutions :: [Problem] -> IO ()
 printAllSolutions [] = putStrLn "No arbitrage opportunities found."
 printAllSolutions solutions = do
     putStrLn ("Found " ++ show (length solutions) ++ " arbitrage opportunities.")
-    mapM_ printSolution solutions
-
-
-
-    
+    mapM_ printNumberedSolution (zip [1..] solutions)
+    where
+        printNumberedSolution (solutionNum, solution) = do
+            putStrLn ("\nArbitrage Solution #" ++ show solutionNum)
+            printSolution solution
