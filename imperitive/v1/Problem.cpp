@@ -1,7 +1,14 @@
 #include "Problem.h"
-#include <iostream>
-#include <limits>
 
+/**
+ * Determines if the current problem setup is solved, indicating an arbitrage opportunity.
+ * 
+ * An arbitrage opportunity is considered solved if:
+ * 1. There are at least two legs in the option combination.
+ * 2. The payoff at each critical price point is greater than or equal to 0.01.
+ * 
+ * @return true if the problem is solved (i.e., an arbitrage opportunity is found), false otherwise.
+ */
 bool Problem::isSolved() const {
 
     if (combination.size() < 2) {
@@ -21,10 +28,18 @@ bool Problem::isSolved() const {
     return true;
 }
 
+/**
+ * Add a leg to the combination.
+ * 
+ * @param leg The leg to add.
+ */
 void Problem::addLeg(const OptionLeg& leg) {
     combination.push_back(leg);
 }
 
+/**
+ * Remove the most recently added leg from the combination.
+ */
 void Problem::removeLeg() {
 
     if (!combination.empty()) {
@@ -32,10 +47,20 @@ void Problem::removeLeg() {
     }
 }
 
+/**
+ * Clear the combination of legs.
+ */
 void Problem::clearCombination() {
     combination.clear();
 }
 
+/**
+ * Calculate the total cost of the combination.
+ * 
+ * The total cost is the sum of the individual costs of all legs in the combination.
+ * 
+ * @return The total cost of the combination.
+ */
 double Problem::getTotalCost() const {
 
     double total_cost = 0.0;
@@ -47,6 +72,15 @@ double Problem::getTotalCost() const {
     return total_cost;
 }
 
+/**
+ * Retrieve a set of critical prices for the current option combination.
+ * 
+ * Critical prices include the strike prices of all the options in the 
+ * combination, as well as two predefined boundary values: 0.0 and 10000.0.
+ * These prices are crucial for evaluating potential payoff scenarios.
+ * 
+ * @return A set of critical prices relevant to the option combination.
+ */
 set<double> Problem::getCriticalPrices() const {
 
     set<double> criticalPrices;
@@ -61,6 +95,16 @@ set<double> Problem::getCriticalPrices() const {
     return criticalPrices;
 }
 
+/**
+ * Calculate the total payoff of the combination at a specific price.
+ * 
+ * The payoff is calculated by summing the intrinsic values of all legs in the combination.
+ * The intrinsic value of a call is max(0, price - strike) and the intrinsic value of a put is max(0, strike - price).
+ * 
+ * @param price The price at which to calculate the payoff.
+ * 
+ * @return The total payoff of the combination at the given price.
+ */
 double Problem::calculatePayoffAt(double price) const {
 
     double payoff = -getTotalCost();
@@ -83,6 +127,14 @@ double Problem::calculatePayoffAt(double price) const {
 }
 
 
+/**
+ * Get all possible legs that can be added to the combination.
+ * 
+ * The returned vector only includes options that are not already in the combination.
+ * If the combination already has 4 legs, an empty vector is returned.
+ * 
+ * @return A vector of OptionLegs that can be added to the combination.
+ */
 vector<OptionLeg> Problem::getPossibleMoves() const {
 
     vector<OptionLeg> possibleMoves;
@@ -138,8 +190,21 @@ vector<OptionLeg> Problem::getPossibleMoves() const {
     return possibleMoves;
 }
 
-
-
+/**
+ * Recursively solves the problem by exploring all possible combinations
+ * of option legs. If a valid solution is found, it is added to the set
+ * of all solutions.
+ *
+ * The function checks if the current combination of option legs forms
+ * a valid and profitable solution. If so, it sorts the combination and
+ * inserts it into the set of all solutions to avoid duplicates.
+ *
+ * The function then generates all possible moves (option legs that can
+ * be added) and iterates over each move. For each move, it adds the leg
+ * to the current combination, recursively calls itself to explore further
+ * combinations, and then removes the leg to backtrack and explore other
+ * possibilities.
+ */
 void Problem::solve() {
     
     if (isSolved()) {
@@ -161,15 +226,42 @@ void Problem::solve() {
     }
 }
 
+/**
+ * Finds all possible arbitrage opportunities in the option chain and
+ * stores them in the set of all solutions.
+ *
+ * This function clears the set of all solutions and then calls the
+ * solve() function to start the recursive search for all
+ * combinations of option legs that form valid and profitable
+ * arbitrage opportunities.
+ */
 void Problem::findAllSolutions() {
     clearSolutions();
     solve();
 }
 
+/**
+ * Clear the set of all solutions.
+ */
 void Problem::clearSolutions() {
     allSolutions.clear();
 }
 
+/**
+ * Prints all the arbitrage opportunities found in the option chain.
+ *
+ * If no arbitrage opportunities are found, it prints a message indicating so.
+ * Otherwise, it iterates through each solution in the set of all solutions,
+ * displaying details such as the net credit, legs involved, and the payoff
+ * at critical prices.
+ *
+ * The function calculates the total cost for each solution and prints the
+ * net credit. It then lists each leg, indicating its position (long or short),
+ * type (call or put), strike price, and cost.
+ *
+ * Finally, it computes and prints the payoff at various critical prices,
+ * including the strikes of the options involved and hypothetical extreme prices.
+ */
 void Problem::printAllSolutions() const {
     if (allSolutions.empty()) {
         cout << "\nNo arbitrage opportunities found in this option chain." << endl;

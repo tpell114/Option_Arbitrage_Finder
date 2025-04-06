@@ -1,12 +1,15 @@
 #include "OptionChain.h"
 
-#include <fstream>
-#include <sstream>
-#include <iostream>
-#include <iomanip>
-
 using namespace std;
 
+/**
+ * Add an option to the chain
+ *
+ * @param type The type of option (call or put)
+ * @param strike The strike price of the option
+ * @param bid The current bid price of the option
+ * @param ask The current ask price of the option
+ */
 void OptionChain::add_option(OptionType type, double strike, double bid, double ask) {
 
     Option option(type, strike, bid, ask);
@@ -23,6 +26,21 @@ void OptionChain::add_option(OptionType type, double strike, double bid, double 
 
 }
 
+/**
+ * Load an option chain from a .txt file
+ *
+ * The file format is as follows:
+ *
+ * type,strike,bid,ask
+ *
+ * Example:
+ *
+ * call,100,9.8,10.0
+ *
+ * The file is expected to have a header row with the column names, which is skipped.
+ *
+ * @param filename The name of the file to load
+ */
 void OptionChain::load_from_file(const string& filename) {
 
     ifstream file(filename);
@@ -62,6 +80,23 @@ void OptionChain::load_from_file(const string& filename) {
     file.close();
 }
 
+/**
+ * Print the option chain in a formatted manner
+ *
+ * The output format is as follows:
+ *
+ * Call Bid | Call Ask | Strike | Put Bid  | Put Ask
+ *
+ * Example:
+ *
+ * 9.8   | 10.0   | 100   | 9.5   | 10.5
+ *
+ * A row is printed for each strike price in the chain, with the
+ * columns representing the bid and ask prices for the call and put
+ * options, respectively, at that strike price. If either the call or
+ * put option is missing at a given strike price, "N/A" is printed in
+ * its place.
+ */
 void OptionChain::print_chain() const {
 
     cout << "Option Chain:" << endl;

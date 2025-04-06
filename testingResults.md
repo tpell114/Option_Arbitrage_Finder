@@ -148,4 +148,4 @@ The only optimization in this version is when the program is adding potential ne
 This version eliminates adding short positions for options that have a $0.00 bid, as these cannot practically be used.
 
 ### Version 3 (Haskell only)
-This version eliminates deduplication on every level of recursion and only does it once at the end.
+This version eliminates deduplication on every level of recursion and only does it once at the end once all solutions are collected.

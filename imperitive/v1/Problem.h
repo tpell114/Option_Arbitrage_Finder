@@ -5,6 +5,7 @@
 #include <vector>
 #include <set>
 #include <algorithm>
+#include <iostream>
 
 using namespace std;
 
@@ -31,7 +32,6 @@ inline bool operator<(const OptionLeg& a, const OptionLeg& b) {
     return a.position < b.position;
 }
 
-
 class Problem {
 
 private:
@@ -44,13 +44,11 @@ private:
     double calculatePayoffAt(double price) const;
     vector<OptionLeg> getPossibleMoves() const;
 
-
 public:
 
     Problem(OptionChain& market_data) 
         : market_data(market_data) {}
         
-
     void addLeg(const OptionLeg& leg);
     void removeLeg();
     bool isSolved() const;
@@ -60,27 +58,7 @@ public:
     void printAllSolutions() const;
     void clearSolutions();
     void clearCombination();
-    
-
-
-
-
-    
-
-
 
 };
-
-
-
-
-
-
-
-
-
-
-
-
 
 #endif
