@@ -158,7 +158,6 @@ void Problem::solve() {
         vector<OptionLeg> sortedCombo = combination;
         sort(sortedCombo.begin(), sortedCombo.end());
         allSolutions.insert(sortedCombo);
-        return;
     }
     
     

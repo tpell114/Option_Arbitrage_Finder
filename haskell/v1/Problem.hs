@@ -109,21 +109,24 @@ isSolved prob =
 -- Solve the problem recursively, returning all possible solutions
 -- Problem -> [Solution]
 solve :: Problem -> [Problem]
-solve prob 
-    | isSolved prob = [prob]  -- There's one solution if already solved
-    | otherwise = uniqueSolutions 
-                  [ solution 
-                  | length (combination prob) < 4,  -- Check maximum leg count
-                    move <- getPossibleMoves prob,  -- Generate possible moves
-                    let prob' = addLeg move prob,   -- Apply move to problem
-                    solution <- solve prob'         -- Recursively solve
-                  ]
+solve prob =
+    let currentSolutions = ([prob | isSolved prob])
+        furtherSolutions =
+            if length (combination prob) >= 4
+            then []  -- Maximum 4 legs reached, don't explore further
+            else uniqueSolutions
+                 [ solution
+                 | move <- getPossibleMoves prob,  -- Generate possible moves
+                   let prob' = addLeg move prob,   -- Apply move to problem
+                   solution <- solve prob'         -- Recursively solve
+                 ]
+    in currentSolutions ++ furtherSolutions
     where
         -- Helper to remove duplicate solutions that just have legs in different orders
         uniqueSolutions :: [Problem] -> [Problem]
         uniqueSolutions [] = []
         uniqueSolutions (x:xs) = x : uniqueSolutions (filter (not . hasSameLegs x) xs)
-        
+
         -- Check if two problems have the same set of legs (ignoring order)
         hasSameLegs :: Problem -> Problem -> Bool
         hasSameLegs p1 p2 = sort (combination p1) == sort (combination p2)
