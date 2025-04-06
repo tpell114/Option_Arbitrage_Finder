@@ -12,7 +12,7 @@ The project includes two solutions:
 ### C++ Version
 To build the C++ version:
 ```bash
-g++ -std=c++17 main.cpp Problem.cpp OptionChain.cpp -o options-arbitrage
+make
 ```
 
 ### Haskell Version
@@ -25,16 +25,16 @@ cabal build
 
 ### C++ Version
 ```bash
-./options-arbitrage input_file.csv
+./options-arbitrage input_file.txt
 ```
 
 ### Haskell Version
 ```bash
-cabal run options_arbitrage_finder -- input_file.csv
+cabal run options_arbitrage_finder -- input_file.txt
 ```
 
 ## Input Format
-The program expects a CSV file with the following format:
+The program expects a .txt file with the following format:
 ```
 type,strike,bid,ask
 call,100,9.8,10.0
@@ -53,15 +53,12 @@ The program will output:
 1. The loaded option chain
 2. Any arbitrage opportunities found
 3. For each arbitrage opportunity:
-   - The net credit (initial cash flow)
+   - The net credit (or debit)
    - The option legs in the combination
    - The profit at all critical prices (strike prices, 0, and 10000)
-4. Performance metrics (execution time)
+4. Performance metrics (average search and total program time)
 
 ## Core Algorithm
 The program uses a depth-first search with backtracking to explore all possible combinations of option positions (long/short calls/puts) up to a maximum of 4 legs. For each combination, it verifies that:
 1. The combination includes at least 2 legs
 2. The payoff is positive at all critical prices (strike prices, 0, and 10000)
-
-## Contributors
-[Your Team Members]
