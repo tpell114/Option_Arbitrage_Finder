@@ -29,7 +29,6 @@ processFile :: FilePath -> IO ()
 processFile filename = do
     putStrLn ("Processing file: " ++ filename)
 
-    -- Catch file read errors
     chain <- loadChainFromFile filename `catch` handleIOError
 
     putStrLn "Option chain loaded:"
