@@ -1,8 +1,8 @@
-# Options Arbitrage Finder - Project Specification
+# Project Specification
 
 ## 1. Introduction
 
-The Options Arbitrage Finder is a software tool designed to identify risk-free profit opportunities (arbitrage) in options markets. It analyzes combinations of options at different strike prices to find positions that guarantee a positive profit regardless of the underlying asset's price movement.
+The Options Arbitrage Finder is a tool designed to identify risk-free profit opportunities (arbitrage) in options markets. It analyzes combinations of options at different strike prices to find positions that guarantee a positive profit regardless of the underlying asset's price movement.
 
 This document specifies the requirements, design, and functionality of both the imperative (C++) and functional (Haskell) implementations of the tool.
 
@@ -15,14 +15,12 @@ Options are financial derivatives that give the holder the right (but not obliga
 Key components of an option:
 - **Type**: Call (right to buy) or Put (right to sell)
 - **Strike Price**: The price at which the option holder can exercise their right
-- **Premium**: The price paid to acquire the option (ask) or received when selling it (bid)
+- **Premium**: The price paid to acquire the option (debit) or received when selling it (credit).
 - **Position**: Long (bought the option) or Short (sold the option)
 
 ### 2.2 Arbitrage Opportunities
 
-An arbitrage opportunity exists when a trader can establish a position that:
-1. Generates an immediate net credit (money received upfront)
-2. Guarantees a non-negative payoff at all possible future prices of the underlying asset
+An arbitrage opportunity exists when a trader can establish a position that guarantees a positive payoff at all possible future prices of the underlying asset.
 
 This tool focuses on finding such opportunities within an options chain (a set of options for the same underlying asset with various strike prices).
 
@@ -31,34 +29,32 @@ This tool focuses on finding such opportunities within an options chain (a set o
 ### 3.1 Functional Requirements
 
 1. **Input Processing**:
-   - Read option chain data from a CSV file
+   - Read option chain data from a .txt file
    - Parse option type, strike price, bid price, and ask price
-   - Handle input validation and error reporting
 
 2. **Core Functionality**:
-   - Systematically search all possible combinations of option positions (up to 4 legs)
-   - Calculate the initial cost/credit of each combination
+   - Systematically search all possible combinations of option positions (2-4 legs)
+   - Calculate the initial debit/credit of each combination
    - Determine the payoff at all critical prices
-   - Identify combinations that constitute arbitrage opportunities
+   - Identify combinations that result in arbitrage opportunities
 
 3. **Output Generation**:
    - Display the loaded option chain
    - List all identified arbitrage opportunities
    - For each opportunity, show:
      - The combination of option positions
-     - The net credit received
+     - The net debit/credit
      - The payoff at all critical prices
-   - Report performance metrics (execution time)
+   - Performance metrics (execution time)
 
 ### 3.2 Non-Functional Requirements
 
 1. **Performance**:
-   - Complete the search in a reasonable time (< 10 seconds for typical option chains)
-   - Optimize memory usage to handle large option chains
+   - Complete the search in a reasonable time
+   - Design data structures for multi-threading support to handle large option chains
 
 2. **Usability**:
    - Clear command-line interface
-   - Informative error messages
    - Well-formatted output
 
 3. **Maintainability**:
@@ -70,7 +66,7 @@ This tool focuses on finding such opportunities within an options chain (a set o
 
 ### 4.1 Input Format
 
-The tool accepts a CSV file with the following format:
+The tool accepts a .txt file with the following format:
 ```
 type,strike,bid,ask
 call,100,9.8,10.0
@@ -86,9 +82,9 @@ Each row represents an option with:
 
 ### 4.2 Command-Line Interface
 
-The tool is invoked as follows:
+The C++ tool is run as follows:
 ```
-./options-arbitrage <input-file>
+./program <input-file>
 ```
 
 For the Haskell implementation:
@@ -150,12 +146,15 @@ Both implementations share the same conceptual components:
 
 2. **Option Chain**:
    - Collection of options organized by strike price
-   - Operations: add option, get options at strike, get all strikes
+   - Operations:
+      -  add option
+      -  get options at strike
+      -  get all strikes
 
 3. **Option Leg**:
    - Represents a position in a specific option
    - Properties: option reference, position type (long/short)
-   - Operations: calculate cost/credit
+   - Operations: calculate debit/credit
 
 4. **Problem Representation**:
    - Current combination of option legs
@@ -232,46 +231,12 @@ The core algorithm follows these steps:
 
 A combination is considered an arbitrage opportunity if:
 1. It consists of at least 2 legs
-2. The payoff is non-negative at all critical prices (all strike prices, 0, and a very high price)
+2. The payoff is non-negative at all critical prices (all strike prices, 0, 10000)
 
 ### 6.2 Search Space Optimization
 
 To make the search efficient:
 1. Limit combinations to at most 4 legs
 2. Avoid adding the same option multiple times
-3. Detect and eliminate duplicate solutions (same set of legs in different order)
-
-## 7. Test Cases
-
-### 7.1 Box Spread Arbitrage
-
-The box spread is a classic arbitrage strategy involving four options:
-```
-type,strike,bid,ask
-call,100,9.8,10.0
-put,100,4.8,5.0
-call,110,2.8,3.0
-put,110,12.8,13.0
-```
-
-Expected result: One arbitrage opportunity (long 100 call, short 100 put, short 110 call, long 110 put)
-
-### 7.2 No Arbitrage
-
-A dataset with no arbitrage opportunities:
-```
-type,strike,bid,ask
-call,50,5.0,5.2
-put,50,0.8,1.0
-call,55,1.9,2.1
-put,55,2.7,2.9
-```
-
-Expected result: No arbitrage opportunities found
-
-## 8. Constraints and Limitations
-
-- The tool assumes all options have the same expiration date
-- The tool does not consider transaction costs or margin requirements
-- Maximum of 4 legs per combination to limit computational complexity
-- The tool focuses on finding risk-free arbitrage, not on optimizing expected returns
+3. Avoid offsetting positions (same strike and type, but opposite position)
+4. Detect and eliminate duplicate solutions (same set of legs in different order)
