@@ -24,7 +24,7 @@ int main(int argc, char* argv[]) {
     cout << "\n========== BRUTE FORCE SOLVER ==========\n";
     cout << "Searching for arbitrage opportunities using brute force..." << endl;
 
-    chrono::microseconds bruteForceTime(0);
+    chrono::microseconds totalTime(0);
     int loops = 5;
 
     for (int i = 0; i < loops; i++) {
@@ -38,23 +38,17 @@ int main(int argc, char* argv[]) {
         }
     
         auto duration = chrono::duration_cast<chrono::microseconds>(loopEndTime - loopStartTime);
-        bruteForceTime += duration;
-        
-        cout << "\nBrute force search iteration " << (i+1) << " completed in " 
-             << duration.count() << " microseconds." << endl;
+        totalTime += duration;
+        cout << "\nSearch completed in " << duration.count() << " microseconds." << endl;
 
         bruteForceSolver.clearSolutions();
     }
 
-    double avgBruteForceTime = static_cast<double>(bruteForceTime.count()) / loops;
-
     auto programEndTime = chrono::steady_clock::now();
-    auto totalProgramTime = chrono::duration_cast<chrono::microseconds>(programEndTime - programStartTime).count();
 
-    cout << "\n========== PERFORMANCE RESULTS ==========\n";
-    cout << fixed << setprecision(2);
-    cout << "Average brute force solver time: " << avgBruteForceTime << " microseconds" << endl;
-    cout << "Total program run time: " << totalProgramTime << " microseconds" << endl;
+    cout << "--------------------------------" << endl;
+    cout << "\nAverage search time for " << loops << " iterations: " << totalTime.count() / loops << " microseconds." << endl << endl;
+    cout << "Program completed in " << chrono::duration_cast<chrono::microseconds>(programEndTime - programStartTime).count() / loops << " microseconds." << endl << endl;
     
     return 0;
 }
