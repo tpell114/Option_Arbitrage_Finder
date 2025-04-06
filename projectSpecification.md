@@ -218,14 +218,16 @@ The core algorithm follows these steps:
 1. Load options from the input file
 2. Initialize an empty combination
 3. Recursively explore all combinations of option legs:
-   a. Check if the current combination is an arbitrage opportunity
-   b. If yes, record it as a solution
-   c. Generate all possible next legs to add
-   d. For each possible leg:
+   
+   - Check if the current combination is an arbitrage opportunity
+   - If yes, record it as a solution
+   - Generate all possible next legs to add
+   - For each possible leg:
       i. Add the leg to the combination
       ii. Recursively continue the search
       iii. Remove the leg from the combination (backtrack)
-4. Output all found solutions
+     
+5. Output all found solutions
 
 ### 6.1 Arbitrage Opportunity Criteria
 
