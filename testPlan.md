@@ -1,4 +1,4 @@
-# Comprehensive Test Plan
+# Test Plan
 
 ## 1. Introduction
 
@@ -97,7 +97,6 @@ This document outlines the testing approach for the Options Arbitrage Finder pro
    - Input: Invalid input that causes errors in different modules
    - Expected: Appropriate error handling and reporting
 
-
 ## 6. System Tests
 
 ### 6.1 Complete Application
@@ -114,7 +113,6 @@ This document outlines the testing approach for the Options Arbitrage Finder pro
 3. **No Arbitrage Handling**
    - Input: .txt file with no arbitrage opportunities
    - Expected: Appropriate message indicating no opportunities
-   
 
 ## 7. Performance Tests
 
