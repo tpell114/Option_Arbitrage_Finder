@@ -90,7 +90,7 @@ This document outlines the testing approach for the Options Arbitrage Finder pro
 
 #### Test Cases:
 1. **End-to-End Flow**
-   - Input: CSV file with option data
+   - Input: .txt file with option data
    - Expected: Loaded option chain and identified solutions
    
 2. **Error Propagation**
