@@ -3,11 +3,13 @@ module Main where
 import System.Environment (getArgs)
 import System.IO
 import System.Exit (exitFailure)
-import Control.Exception ( catch, IOException, evaluate )
+import Control.Exception (catch, IOException, evaluate)
 import System.Clock (Clock(Monotonic), getTime, toNanoSecs, diffTimeSpec)
 import Text.Printf (printf)
 import Control.DeepSeq (force)
 import Control.Monad (when)
+import Control.Parallel.Strategies (using, parList, rdeepseq)
+import GHC.Conc (getNumCapabilities, setNumCapabilities)
 
 import Option
 import OptionChain
@@ -31,6 +33,9 @@ main = do
 processFile :: FilePath -> IO ()
 processFile filename = do
     putStrLn ("Processing file: " ++ filename)
+    
+    numCores <- getNumCapabilities
+    putStrLn $ "Using parallel processing with " ++ show numCores ++ " threads"
 
     chain <- loadChainFromFile filename `catch` handleIOError
 
@@ -42,7 +47,7 @@ processFile filename = do
     let problem = newProblem chain
     let loops = 5
     totalDuration <- runSearchLoop problem loops 1 0
-
+    
     putStrLn "--------------------------------"
     putStrLn ("\nAverage search time for " ++ show loops ++ " iterations: "
               ++ printf "%.0f" (totalDuration / fromIntegral loops) ++ " microseconds.")
@@ -51,7 +56,7 @@ processFile filename = do
         runSearchLoop _ loops currentLoop totalTime | currentLoop > loops = return totalTime
         runSearchLoop prob loops currentLoop totalTime = do
             startTime <- getTime Monotonic
-            solutions <- evaluate (force (solve prob))
+            solutions <- evaluate (force (solveParallel prob))
             endTime <- getTime Monotonic
 
             let diffTime = diffTimeSpec endTime startTime

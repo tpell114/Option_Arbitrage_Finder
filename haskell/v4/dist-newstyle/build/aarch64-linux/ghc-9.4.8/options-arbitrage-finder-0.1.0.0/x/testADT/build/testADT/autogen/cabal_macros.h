@@ -10,6 +10,16 @@
   (major1) == 0 && (major2) <  1 || \
   (major1) == 0 && (major2) == 1 && (minor) <= 0)
 #endif /* MIN_VERSION_options_arbitrage_finder */
+/* package async-2.2.5 */
+#ifndef VERSION_async
+#define VERSION_async "2.2.5"
+#endif /* VERSION_async */
+#ifndef MIN_VERSION_async
+#define MIN_VERSION_async(major1,major2,minor) (\
+  (major1) <  2 || \
+  (major1) == 2 && (major2) <  2 || \
+  (major1) == 2 && (major2) == 2 && (minor) <= 5)
+#endif /* MIN_VERSION_async */
 /* package base-4.17.2.1 */
 #ifndef VERSION_base
 #define VERSION_base "4.17.2.1"
@@ -50,6 +60,16 @@
   (major1) == 1 && (major2) <  4 || \
   (major1) == 1 && (major2) == 4 && (minor) <= 8)
 #endif /* MIN_VERSION_deepseq */
+/* package parallel-3.2.2.0 */
+#ifndef VERSION_parallel
+#define VERSION_parallel "3.2.2.0"
+#endif /* VERSION_parallel */
+#ifndef MIN_VERSION_parallel
+#define MIN_VERSION_parallel(major1,major2,minor) (\
+  (major1) <  3 || \
+  (major1) == 3 && (major2) <  2 || \
+  (major1) == 3 && (major2) == 2 && (minor) <= 2)
+#endif /* MIN_VERSION_parallel */
 /* package split-0.2.5 */
 #ifndef VERSION_split
 #define VERSION_split "0.2.5"

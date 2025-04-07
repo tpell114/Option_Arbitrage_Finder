@@ -12,14 +12,17 @@ module Problem
     calculatePayoffAt,
     getPossibleMoves,
     isSolved,
-    solve
+    solve,
+    solveParallel
 
 ) where
 
 import qualified Data.Set as Set
 import Data.List (sort)
 import GHC.Generics (Generic)
-import Control.DeepSeq (NFData)
+import Control.DeepSeq (NFData, force)
+import Control.Parallel.Strategies (using, parList, rdeepseq, Strategy, rpar)
+import Control.Monad (when)
 import Option
 import OptionChain
 import OptionLeg
@@ -143,3 +146,31 @@ solve prob = removeDuplicates (findAllSolutions prob)
     hasSameLegs :: Problem -> Problem -> Bool
     hasSameLegs p1 p2 = sort (combination p1) == sort (combination p2)
     
+-- | Parallel version of the solve function
+-- Uses parallel strategies to speed up the search
+solveParallel :: Problem -> [Problem]
+solveParallel prob = removeDuplicates (findAllSolutionsParallel prob)
+    where
+    -- Recursive function to find all solutions with parallelism
+    findAllSolutionsParallel p =
+        let currentSolutions = ([p | isSolved p])
+            moves = getPossibleMoves p
+        in 
+            if length (combination p) >= 4 
+            then currentSolutions  -- Maximum 4 legs reached, don't explore further
+            else currentSolutions ++ 
+                 if length moves <= 1
+                 then -- For small number of moves, don't parallelize
+                      concat [findAllSolutionsParallel (addLeg move p) | move <- moves]
+                 else -- Parallelize across the different next moves
+                      concat (map (\move -> findAllSolutionsParallel (addLeg move p)) moves 
+                              `using` parList rdeepseq)
+
+    -- Helper to remove duplicate solutions that just have legs in different orders
+    removeDuplicates :: [Problem] -> [Problem]
+    removeDuplicates [] = []
+    removeDuplicates (x:xs) = x : removeDuplicates (filter (not . hasSameLegs x) xs)
+
+    -- Check if two problems have the same set of legs (ignoring order)
+    hasSameLegs :: Problem -> Problem -> Bool
+    hasSameLegs p1 p2 = sort (combination p1) == sort (combination p2)
