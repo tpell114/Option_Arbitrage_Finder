@@ -1,0 +1,39 @@
+name:                options-arbitrage-finder
+version:             0.1.0.0
+synopsis:            Options arbitrage finder
+description:         A program to find arbitrage opportunities in options markets
+author:              Student
+maintainer:          student@example.com
+category:            Finance
+build-type:          Simple
+cabal-version:       >=1.10
+
+executable options_arbitrage_finder
+  main-is:             Main.hs
+  other-modules:       Option,
+                      OptionChain,
+                      OptionLeg,
+                      Problem,
+                      IO
+  build-depends:       base >= 4.7 && < 5,
+                      containers,
+                      time,
+                      split,
+                      clock,
+                      deepseq
+  default-language:    Haskell2010
+
+executable testADT
+  main-is:             TestADT.hs
+  other-modules:       Option,
+                      OptionChain,
+                      OptionLeg,
+                      Problem,
+                      IO
+  build-depends:       base >= 4.7 && < 5,
+                      containers,
+                      time,
+                      split,
+                      clock,
+                      deepseq
+  default-language:    Haskell2010
