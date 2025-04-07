@@ -92,10 +92,6 @@ This document outlines the testing approach for the Options Arbitrage Finder pro
 1. **End-to-End Flow**
    - Input: .txt file with option data
    - Expected: Loaded option chain and identified solutions
-   
-2. **Error Propagation**
-   - Input: Invalid input that causes errors in different modules
-   - Expected: Appropriate error handling and reporting
 
 ## 6. System Tests
 
