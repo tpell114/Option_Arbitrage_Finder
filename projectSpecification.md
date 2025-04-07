@@ -223,10 +223,11 @@ The core algorithm follows these steps:
    - If yes, record it as a solution
    - Generate all possible next legs to add
    - For each possible leg:
-      i. Add the leg to the combination
-      ii. Recursively continue the search
-      iii. Remove the leg from the combination (backtrack)
-     
+      - Add the leg to the combination
+      - Recursively continue the search
+      - Remove the leg from the combination (backtrack)
+    
+4. Deduplicate found solutions
 5. Output all found solutions
 
 ### 6.1 Arbitrage Opportunity Criteria
