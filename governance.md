@@ -31,7 +31,7 @@ As the sole developer on this project, I manage all aspects of the development p
 7. Documentation phase: Completing all required documentation
 
 ## Version Control Strategy
-I use Git for version control.
+I will use Git for version control.
 
 ## Testing Strategy
 
