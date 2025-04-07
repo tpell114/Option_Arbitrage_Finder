@@ -7,7 +7,7 @@
 | Data 1    | 167,917 µS  | 2,654,174 µS | 605,633 µS | 1,773,109 µS | 406,424 µS | 401,027 µS | 146,726 µS |
 | Data 2    | 168,740 µS  | 2,727,347 µS | 598,656 µS | 1,774,383 µS | 407,871 µS | 400,135 µS | 141,989 µS |
 | Data 3    | 168,528 µS  | 2,654,376 µS | 592,449 µS | 1,976,657 µS | 450,682 µS | 447,874 µS | 156,945 µS |
-| Data 4    | 156,829 µS  | 2,459,125 µS | 527,826 µS | 744,718 µS   | 153,105 µS | 149,414 µS | 67,348 µS  |
+| Data 4    | 156,829 µS  | 2,459,125 µS | 527,826 µS | 744,718 µS   | 153,105 µS | 149,414 µS |  67,348 µS |
 | Data 5    | 71.36 min   | -            | -          | -            | -          | -          | -          |
 
 **All tests averaged over 5 iterations**
@@ -149,3 +149,6 @@ This version eliminates adding short positions for options that have a $0.00 bid
 
 ### Version 3 (Haskell only)
 This version eliminates deduplication on every level of recursion and only does it once at the end once all solutions are collected.
+
+### Version 4 (Haskell only)
+This version implements multithreading to parallelize the search process. The program automatically detects the maximum number of available system cores and distributes the workload accordingly.
