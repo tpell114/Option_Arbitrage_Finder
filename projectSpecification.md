@@ -242,4 +242,5 @@ To make the search efficient:
 1. Limit combinations to at most 4 legs
 2. Avoid adding the same option multiple times
 3. Avoid offsetting positions (same strike and type, but opposite position)
-4. Detect and eliminate duplicate solutions (same set of legs in different order)
+4. Avoid adding short positions with a bid of $0.00, as these are not practical in the real-world
+5. Detect and eliminate duplicate solutions (same set of legs in different order)
