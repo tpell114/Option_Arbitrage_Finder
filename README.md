@@ -25,7 +25,7 @@ cabal build
 
 ### C++ Version
 ```bash
-./options-arbitrage input_file.txt
+./program input_file.txt
 ```
 
 ### Haskell Version
