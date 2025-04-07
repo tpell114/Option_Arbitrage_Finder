@@ -25,6 +25,9 @@ main = do
             putStrLn "Usage: options-arbitrage <input-file>"
             exitFailure
 
+-- | Processes an options data file to find arbitrage opportunities
+-- Loads the option chain, prints it, and then searches for arbitrage opportunities
+-- Also measures and reports the performance of the search
 processFile :: FilePath -> IO ()
 processFile filename = do
     putStrLn ("Processing file: " ++ filename)
@@ -62,7 +65,8 @@ processFile filename = do
 
             runSearchLoop prob loops (currentLoop + 1) (totalTime + durationMicros)
 
--- Handle IO errors
+-- | Handles IO errors when reading files
+-- Prints an error message and exits with failure
 handleIOError :: IOException -> IO a
 handleIOError e = do
     putStrLn ("Error reading file: " ++ show e)

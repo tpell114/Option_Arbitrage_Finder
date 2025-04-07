@@ -13,17 +13,17 @@ import GHC.Generics (Generic)
 import Control.DeepSeq (NFData)
 import Option
 
--- Map(Strike -> (call, put))
+-- | Represents a collection of options organized by strike price
+-- For each strike price, we can have a call option, a put option, or both
 newtype OptionChain = ChainCon (Map.Map Double (Maybe Option, Maybe Option))
     deriving stock (Show, Generic)
     deriving anyclass (NFData)
-
 
 -- Create an empty option chain
 emptyChain :: OptionChain
 emptyChain = ChainCon Map.empty
 
--- Add an option to the chain
+-- | Adds an option to the chain
 addOption :: Option -> OptionChain -> OptionChain
 addOption opt (ChainCon chain) = ChainCon (Map.alter updatePair (strike opt) chain)
     where
@@ -37,12 +37,11 @@ addOption opt (ChainCon chain) = ChainCon (Map.alter updatePair (strike opt) cha
         maybeCall = if isCall then Just opt else Nothing
         maybePut = if not isCall then Just opt else Nothing
 
--- Get both options at a specific strike price
--- strike -> chain -> (maybe call, maybe put)
+-- | Gets both the call and put options at a specific strike price
+-- Returns a tuple of (Maybe Call, Maybe Put)
 getOptionsAtStrike :: Double -> OptionChain -> (Maybe Option, Maybe Option)
 getOptionsAtStrike strike (ChainCon chain) = Map.findWithDefault (Nothing, Nothing) strike chain
 
--- Get all strike prices in the chain
--- chain -> [strikes]
+-- | Gets all strike prices available in the chain
 getAllStrikes :: OptionChain -> [Double]
 getAllStrikes (ChainCon chain) = Map.keys chain

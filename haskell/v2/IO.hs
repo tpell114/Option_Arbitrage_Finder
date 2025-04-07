@@ -15,7 +15,7 @@ import OptionChain
 import OptionLeg
 import Problem
 
--- Load option chain from a CSV file
+-- | Load option chain from a CSV file
 -- Format: type,strike,bid,ask
 -- Example: call,100,9.8,10.0
 loadChainFromFile :: FilePath -> IO OptionChain
@@ -25,7 +25,7 @@ loadChainFromFile filepath = do
     let options = map parseOptionRow rows
     return (foldr addOption emptyChain options)
 
--- Parse a single row into an Option
+-- | Parse a single row into an Option
 parseOptionRow :: String -> Option
 parseOptionRow row =
     case splitOn "," row of
@@ -37,7 +37,7 @@ parseOptionRow row =
             in newOption optType strikeVal bidVal askVal
         _ -> error ("Invalid row format: " ++ row)
 
--- Print the option chain in a formatted manner
+-- | Print the option chain in a formatted manner
 printChain :: OptionChain -> IO ()
 printChain chain = do
     putStrLn "Option Chain:"
@@ -64,7 +64,7 @@ printChain chain = do
         padRight n str = take n (str ++ repeat ' ')
         formatPrice = printf "%.2f"
 
--- Print a solution (arbitrage opportunity)
+-- | Print a solution (arbitrage opportunity)
 printSolution :: Problem -> IO ()
 printSolution solution = do
     putStrLn "--------------------------------"
@@ -93,7 +93,7 @@ printSolution solution = do
         formatPrice = printf "%.2f"
 
 
--- Print all solutions
+-- | Print all solutions
 printAllSolutions :: [Problem] -> IO ()
 printAllSolutions [] = putStrLn "No arbitrage opportunities found."
 printAllSolutions solutions = do
